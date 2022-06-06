@@ -4,16 +4,85 @@
 	<div class="limiter">
 	
 		<div class="container-login100">
-		 <center><a href="javascript:history.back()"><i class="fa fa-backward" aria-hidden="true"></i>Go Back</a></center>
+		 <center><a href="javascript:window.close();"><i class="fa fa-backward" aria-hidden="true"></i>Go Back</a></center>
 			<div class="wrap-login100">
+				<?php 
+  if (isset($_POST['login'])) {
+    
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+
+  
+
+  include 'dbCon.php';
+  $con = connect();
+
+  $emailSQL = "SELECT * FROM user_info WHERE email = '$email';";
+
+  $passwordSQL = "SELECT * FROM user_info WHERE email = '$email' And password = '$password';";
+
+  $emailResult = $con->query($emailSQL);
+
+  $passwordResult = $con->query($passwordSQL);
+
+  if ($emailResult->num_rows <= 0) {
+    ?>
+   <div class="alert alert-warning alert-dismissible" role="alert">
+  <strong>&emsp;Sorry!</strong> The given email does not exists.&emsp;
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  <?php
+  }else if ($passwordResult->num_rows <= 0) {
+	  ?>
+   <div class="alert alert-warning alert-dismissible" role="alert">
+  <strong>&emsp;Sorry!</strong> You have entered the wrong password.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  <?php
+  }else{
+
+    $_SESSION['isLoggedIn'] = TRUE;
+	//setcookie ("isLoggedIn",TRUE ,time()+ 60*60*24*120);
+
+    // $SQL = "SELECT * FROM restaurant_info WHERE email = '$email' And password = '$password' AND approve_status=1";
+
+     $SQL = "SELECT * FROM user_info WHERE email = '$email' And password = '$password'";
+
+    $result = $con->query($SQL);
+
+    foreach ($result as $r) {
+      $_SESSION['id'] = $r['id'];
+      $_SESSION['name'] = $r['user_name'];   
+      $_SESSION['email'] = $r['email'];
+      $_SESSION['password'] = $r['password'];
+      $_SESSION['role'] = $r['role'];
+	 // setcookie ("username",$r["user_name"],time()+ 60*60*24*120);
+	  //setcookie ("role",$r['role'],time()+ 60*60*24*120);
+	
+    }
+
+    if ($_SESSION['role'] == 1) {
+       echo '<script>window.location="dashboard/index.php"</script>';
+    }elseif ($_SESSION['role'] == 2) {
+      echo '<script>window.location="index.php"</script>';
+    } 
+    
+  }
+
+  }
+?>
 				<div class="login100-pic js-tilt" data-tilt>
 					<img src="assets/img/3.png" alt="IMG">
 				</div>
 
-	<form action="" method="POST" enctype="multipart/form-data">
+	<form action="" method="POST" enctype="multipart/form-data" >
 					<span class="login100-form-title">
-						Member Login
-					</span>
+						Member Login					
+					</span>				
 
 					<div class="wrap-input100">
 						<input class="input100" type="email" name="email" placeholder="Email" required>
@@ -43,7 +112,7 @@
 							Forgot
 						</span>
 						<a class="txt2" href="#">
-							Username / Password?
+							Password?
 						</a>
 					</div>
 
@@ -58,60 +127,6 @@
 			</div>
 		</div>
 	</div>
-	
-	<?php 
-  if (isset($_POST['login'])) {
-    
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-
-  
-
-  include 'dbCon.php';
-  $con = connect();
-
-  $emailSQL = "SELECT * FROM user_info WHERE email = '$email';";
-
-  $passwordSQL = "SELECT * FROM user_info WHERE email = '$email' And password = '$password';";
-
-  $emailResult = $con->query($emailSQL);
-
-  $passwordResult = $con->query($passwordSQL);
-
-  if ($emailResult->num_rows <= 0) {
-    echo '<script>alert("This Email Does Not Exist.")</script>';
-    echo '<script>window.location="login.php"</script>';
-  }else if ($passwordResult->num_rows <= 0) {
-    echo '<script>alert("This Password is Incorrect.")</script>';
-    echo '<script>window.location="login.php"</script>';
-  }else{
-
-    $_SESSION['isLoggedIn'] = TRUE;
-
-    // $SQL = "SELECT * FROM restaurant_info WHERE email = '$email' And password = '$password' AND approve_status=1";
-
-     $SQL = "SELECT * FROM user_info WHERE email = '$email' And password = '$password'";
-
-    $result = $con->query($SQL);
-
-    foreach ($result as $r) {
-      $_SESSION['id'] = $r['id'];
-      $_SESSION['name'] = $r['user_name'];   
-      $_SESSION['email'] = $r['email'];
-      $_SESSION['password'] = $r['password'];
-      $_SESSION['role'] = $r['role'];
-    }
-
-    if ($_SESSION['role'] == 1) {
-       echo '<script>window.location="dashboard/index.php"</script>';
-    }elseif ($_SESSION['role'] == 2) {
-      echo '<script>window.location="index.php"</script>';
-    } 
-    
-  }
-
-  }
-?>
 	
 	
 

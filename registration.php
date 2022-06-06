@@ -1,11 +1,4 @@
- <?php //include 'template/header.php'; ?>
-<!-- nav-bar.php -->
-       <!-- <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-            <div class="container">
-                <a class="navbar-brand" style="margin-left:80px;">Needy Engineer</a>
-            </div>
-        </nav>
-          -->
+
 <?php include 'template/header-login.php'; ?>
 <body>
 	
@@ -13,6 +6,7 @@
 		<div class="container-login100"><center><a href="javascript:history.back()"><i class="fa fa-backward" aria-hidden="true"></i>Go Back</a></center>
 	
 			<div class="wrap-login100">
+			
 				<div class="login100-pic js-tilt" data-tilt>
 				
 					<img src="assets/img/3.png" alt="IMG">
@@ -20,9 +14,9 @@
 					<form action="manage-insert.php" method="POST" enctype="multipart/form-data">
 					
 					<span class="login100-form-title">
-						Register Yourself
+						Register Yourself						
 					</span>
-
+					<!-- manage-insert.php -->
 					<div class="wrap-input100" >
                         <input class="input100" type="text" name="name" placeholder="First Name">
 						<span class="focus-input100"></span>
@@ -59,7 +53,7 @@
 							Forgot
 						</span>
 						<a class="txt2" href="#">
-							Username / Password?
+							Password?
 						</a>
 					</div>
 

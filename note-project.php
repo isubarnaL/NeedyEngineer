@@ -8,8 +8,7 @@
       include_once 'dbCon.php';
       $con = connect();
       if (isset($_POST['subjsearch'])) {
-        $uni_id = $_POST['uni_id'];
-		
+        $uni_id = $_POST['uni_id'];	
 		$depart_id = $_POST['depart_id'];
 		$subject_id = $_POST['subject_id'];
 		$semester = $_POST['semester'];
@@ -34,19 +33,24 @@
   }else{
     $SQL = "SELECT * FROM note_list 
 	
-	JOIN `notemaker_tables` ON note_list.notemaker_id=notemaker_tables.notemaker_id 
+	JOIN `subject_names` ON note_list.subject_id=subject_names.subject_id 
+										JOIN `notemaker_tables` ON note_list.notemaker_id=notemaker_tables.notemaker_id
+										JOIN `depart_tables` ON note_list.depart_id=depart_tables.depart_id
+										JOIN `semester` ON note_list.semester=semester.semester
+										JOIN `uni_tables` ON note_list.uni_id=uni_tables.uni_id
 	WHERE note_list.uni_id = '$uni_id' AND note_list.depart_id = '$depart_id' AND note_list.semester = '$semester' AND note_list.subject_id = '$subject_id';";
     $result = $con->query($SQL);
 				foreach ($result as $r) {
 					?>
-					 <h1 class="text-white">Notes For <?php echo $r['uni_name']; ?> University <?php echo $r['depart_name']; ?> Department <?php echo $r['subject_name']; ?> Subject <?php echo $r['sem_name']; ?> Semester</h1><br>
+					 <h1 class="text-white">Notes For <?php echo $r['uni_name']; ?> University <?php echo $r['depart_name']; ?> Department <?php echo $r['subject_name']; ?> <?php echo $r['sem_name']; ?> Semester</h1><br>
 				
 					 <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-                    <div class="col-xl-8 col-lg-7"> <iframe id="pdf-js-viewer" src="dashboard/note-pdf/<?php echo $r['note']; ?>" title="webviewer" frameborder="0" width="500" height="600"></iframe></div>
+                    <div class="col-xl-8 col-lg-7"> <iframe id="pdf-js-viewer" src="dashboard/note-pdf/<?php echo $r['note']; ?>" title="webviewer" frameborder="0" width="450" height="600"></iframe></div>
 					 <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-						<p class="text-white">By: <?php echo $r['notemaker_name']; ?><br></p><br>
-				<a href="dashboard/note-pdf/<?php echo $r['note']; ?>" target="_blank" class="btn btn-success">FullScreen</a></div></div>
+						<p class="text-white"><br>By: <?php echo $r['notemaker_name']; ?><br></p><br>
+				<a href="dashboard/note-pdf/<?php echo $r['note']; ?>" target="_blank" class="btn btn-outline-success">FullScreen</a><br><br><br>
+			</div></div>
             </div>
 			<hr style="border-width:2;color:white;background-color:white"><br>
 				<?php
@@ -149,7 +153,7 @@
                     <div class="col-xl-8 col-lg-7"> <iframe id="pdf-js-viewer" src="dashboard/note-pdf/<?php echo $r['note']; ?>" title="webviewer" frameborder="0" width="500" height="600"></iframe></div>
 					 <div class="col-xl-4 col-lg-5">
                         <div class="featured-text text-center text-lg-left">
-						  <p class="text-white"> <?php echo $r['uni_name']; ?> University <br><?php echo $r['depart_name']; ?> Department<br><?php echo $r['subject_name']; ?> Subject<br> <?php echo $r['sem_name']; ?> Semester</p><br>
+						  <p class="text-white"> <?php echo $r['uni_name']; ?> University <br><?php echo $r['depart_name']; ?> Department<br><?php echo $r['subject_name']; ?><br> <?php echo $r['sem_name']; ?> Semester</p><br>
 				<a href="dashboard/note-pdf/<?php echo $r['note']; ?>" target="_blank" class="btn btn-success">FullScreen</a><br><br><br><br><br><br></div></div>
             </div>
 			<hr style="border-width:2;color:white;background-color:white"><br>

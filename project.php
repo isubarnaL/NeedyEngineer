@@ -4,11 +4,11 @@
 		 <!-- delete from here Row-->	
                 <!-- Featured Project Row-->
              <center>   <h1 class="text-white">Find Notes by Subject:</h1><br>
-				<div class="btn-group" style="border: 2px solid black; padding:50px;" ;>
+				
                   <form class="form-inline" action="notes.php" method="POST" enctype="multipart/form-data">
-		               
+		               <div class="input-group" style="border: 2px solid black; padding:50px;">
 					  
-                          <select class="sum-control btn-black" name="uni_id" placeholder="xxxyyyy" >
+                          <select class="sum-control btn-black" name="uni_id" id="uni_id1" required>
                           <option value="">----University----</option>
                           <?php 
                               include 'dbCon.php';
@@ -20,7 +20,7 @@
                               <option value="<?php echo $r['uni_id']; ?>"><?php echo $r['uni_name']; ?></option>
                             <?php } ?>
                          </select>
-			              <select class="sum-control flex-fill btn-black" name="depart_id"  >
+			              <select class="sum-control btn-black" name="depart_id" id="depart_id"  required>
                           <option value="">----Department----</option>
                             <?php 
 							
@@ -31,8 +31,8 @@
                             ?>
                               <option value="<?php echo $r['depart_id']; ?>"><?php echo $r['depart_name']; ?></option>
                             <?php } ?> </select>
-			              <select class="sum-control btn-black"  name="semester"  >
-                          <option value="">----Semester----</option>
+			              <select class="sum-control btn-black"  name="semester" id="semester1"  required>
+                          <option value="">---Semester---</option>
                           <?php 
                               
                               $con = connect();
@@ -42,30 +42,73 @@
                             ?>
                               <option value="<?php echo $r['semester']; ?>"><?php echo $r['sem_name']; ?></option>
                             <?php } ?> </select>
-		               	  <select class="sum-control btn-black" name="subject_id"  >
-                          <option value="">----Subject----</option>
-                                   <?php 
-                              
-                              $con = connect();
-                              $sql = "SELECT * FROM `subject_names`;";							  
-                              $result = $con->query($sql);
-                              foreach ($result as $r) {
-                            ?>
-                              <option value="<?php echo $r['subject_id']; ?>"><?php echo $r['subject_name']; ?></option>
-                            <?php } ?> </select>
+<script>
+$(document).ready(function(){
+    $('#uni_id1').on('change', function(){
+        var uniID = $(this).val();
+            $.ajax({
+                type:'POST',
+                url:'ajaxData.php',
+                data: {'uni_id': uniID},
+				success:function(html){
+                   //$('#subject_id').html('<option value="">Select department</option>');
+                }
+				
+
+            }); 
+        
+    });
+	    $('#depart_id').on('change', function(){
+        var departID = $(this).val();
+     
+            $.ajax({
+                type:'POST',
+                url:'ajaxData.php',
+                data: {depart_id: departID},
+				
+                success:function(html){
+					$('#subject_id').html(html); 
+                  // $('#subject_id').html('<option value="">Select semester</option>');
+                }
+            }); 
+        
+    });
+	
+	
+	    $('#semester1').on('change', function(){
+        var semID = $(this).val();
+            $.ajax({
+                type:'POST',
+                url:'ajaxData.php',
+                data: {semester: semID},				
+                success:function(html){
+                   $('#subject_id').html(html); 
+                }
+            }); 
+
+    });
+
+});
+</script>
 							
+		               	  <select class="sum-control btn-black" name="subject_id" id="subject_id" required>	  
+                          <option value="">----Subject----</option>					
+                          </select>
+				 
                         <div class="featured-text text-center text-lg-left">
                           <button class="btn btn-black mx-auto" type="submit" name="subjsearch" >search</button></div></center>
                   </form>	
+				  
+
 </div>
-			      <br><br><hr>
-				  <h5 class="text-warning"><center>OR<br><i class="fa fa-chevron-down" aria-hidden="true"></i></center></h5><hr><br>
+			      <br><br>
+				  <h5 class="text-warning"><center>OR<br><i class="fa fa-chevron-down" aria-hidden="true"></i></h5><hr style="width:8%;border-width:1px;color:white;background-color:cyan;"><br></center>
 			
 			  <center>  <h1 class="text-white">Find Notes by College:</h1><br>
 				<div class="btn-group" style="border: 2px solid black; padding:50px;">
 			      <form class="form-inline" action="notes.php" method="POST" enctype="multipart/form-data">
 		               
-                           <select class="sum-control btn-black"  name="uni_id"  >
+                           <select class="sum-control btn-black"  name="uni_id"  required>
 						   <option value="">----University----</option>
 						     <?php 
                              // include 'dbCon.php';
@@ -77,7 +120,7 @@
                               <option value="<?php echo $r['uni_id']; ?>"><?php echo $r['uni_name']; ?></option>
                             <?php } ?>
                            </select>
-		                   <select class="sum-control btn-black"  name="college_id"  >
+		                   <select class="sum-control btn-black"  name="college_id"  required>
                            <option value="">----College----</option>
 						    <?php 
                               
@@ -89,7 +132,7 @@
                               <option value="<?php echo $r['college_id']; ?>"><?php echo $r['college_name']; ?></option>
                             <?php } ?>
                            </select>
-			               <select class="sum-control btn-black" name="depart_id"  >
+			               <select class="sum-control btn-black" name="depart_id"  required>
                            <option value="">----Department----</option>
 						     <?php 
                               
@@ -101,7 +144,7 @@
                               <option value="<?php echo $r['depart_id']; ?>"><?php echo $r['depart_name']; ?></option>
                             <?php } ?>
 						   </select>
-                           <select class="sum-control btn-black" name="semester" >
+                           <select class="sum-control btn-black" name="semester" required>
                            <option value="">----Semester----</option>
 						     <?php 
                               
@@ -116,15 +159,15 @@
                           <button class="btn btn-black mx-auto" type="submit" name="clzsearch">search <i class="fa fa-search"></i></button></div>
                        </div></center>
 				  </form>
-				  <br><br><hr>
-				  <h5 class="text-warning"><center>OR<br><i class="fa fa-chevron-down" aria-hidden="true"></i></center></h5><hr><br>
+				  <br><br>
+				  <h5 class="text-warning"><center>OR<br><i class="fa fa-chevron-down" aria-hidden="true"></i></h5><hr style="width:8%;border-width:1px;color:white;background-color:cyan;"></center><br>
 				
                 <center><h1 class="text-white">Find Notes by NoteMaker:</h1><br>
 				
 				<div class="btn-group" style="border: 2px solid black; padding:50px;">
                    <form class="form-inline" action="notes.php" method="POST" enctype="multipart/form-data">
 			            
-                            <select class="sum-control btn-black"  name="notemaker_id"  >
+                            <select class="sum-control btn-black"  name="notemaker_id" id="notemaker_id"  required>
 						   <option value="">----Notemaker----</option>
 						 <?php 
                     
